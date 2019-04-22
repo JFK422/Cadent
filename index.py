@@ -1,31 +1,33 @@
-import sys, os
+import sys, os, sip, sqlite3, time
 import qtawesome as qta
-from components import create
-from components import introductionWindow
-from PyQt5 import QtGui, QtCore, QtWidgets
-import colorama as clr
+from components import create, gameLoop
+from PyQt5 import QtGui, QtCore, QtWidgets, Qt
 
 #This is the MAIN file of the app. Its used for handeling hte diffrent scripts within this programm.
 #Debug prints are as formatted like this: FILE; CLASS; METHOD: MESSAGE
 
 #Variables
+app = None
 
 class Window(QtWidgets.QWidget):
     def __init__(self):
         super(Window, self).__init__()
-        self.setGeometry(50,50,1200,700)
-        self.setWindowTitle("Hitch")
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint) #Use this for a frameless window. Will be used later!
+        #Set the windows porperties
+        self.setGeometry(50,50,1920,1080)
+        self.setWindowTitle("Cadent")
+
         create.CreateUI.create(self)
-        #init colorama
-        clr.init()
-        #Set the app icon, maximize the window, show it and the startup window.
-        self.icon()
+
+        #Center and maximize the window.
         self.center()
         self.showMaximized()
         self.show()
-        self.startup = introductionWindow.Introduction()
-        self.startup.show()
+
+        print("Qt version:", QtCore.QT_VERSION_STR)
+        print("PyQt version:", Qt.PYQT_VERSION_STR)
+        print("SIP version:", sip.SIP_VERSION_STR)
+        print("Sqlite3 module version;", sqlite3.version)
+        print("Sqlite3 version:", sqlite3.sqlite_version)
 
     #Center the window on the monitor where the mouse cursor is
     def center(self):
@@ -45,27 +47,25 @@ class Window(QtWidgets.QWidget):
         else:
             self.showMaximized()
 
-    def icon(self):
-        #Set app icon    
-        app_icon = QtGui.QIcon()
-        app_icon.addFile('resources/icons/16x16.png', QtCore.QSize(16,16))
-        app_icon.addFile('resources/icons/32x32.png', QtCore.QSize(32,32))
-        app_icon.addFile('resources/icons/64x64.png', QtCore.QSize(64,64))
-        app_icon.addFile('resources/icons/128x128.png', QtCore.QSize(128,128))
-        app_icon.addFile('resources/icons/256x256.png', QtCore.QSize(256,256))
-        app.setWindowIcon(app_icon)
-
-
 if __name__ == '__main__':
     #Creating the QApplication
     app = QtWidgets.QApplication(sys.argv)
 
     #Set the main styling of the app
-    #Yes its all in this file!
-    with open("./appearance/style/stylesheet.css") as f:
+    #Yes its all canned in this file!
+    with open("./resources/stylesheet.css") as f:
         theme = f.read()
     app.setStyleSheet(theme)
 
+    #Set the app icon
+    app_icon = QtGui.QIcon()
+    app_icon.addFile('resources/icons/16x16.png', QtCore.QSize(16,16))
+    app_icon.addFile('resources/icons/32x32.png', QtCore.QSize(32,32))
+    app_icon.addFile('resources/icons/64x64.png', QtCore.QSize(64,64))
+    app_icon.addFile('resources/icons/128x128.png', QtCore.QSize(128,128))
+    app_icon.addFile('resources/icons/256x256.png', QtCore.QSize(256,256))
+    app.setWindowIcon(app_icon)
+    
     #Misc stuff
     window = Window()
     sys.exit(app.exec_())
