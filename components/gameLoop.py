@@ -1,5 +1,5 @@
-import time
-from components import glView, create
+import time, sys
+from components.GL import glView
 from PyQt5 import QtCore
 
 #The Holy code of a threaded game loop.
@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 #N° of hours wasted on debugging/research: 11
 class Loop(QtCore.QThread):
     exitFlag = False
+    updateSig = QtCore.pyqtSignal()
 
     def __init__(self, threadID, name):
         QtCore.QThread.__init__(self)
@@ -17,6 +18,7 @@ class Loop(QtCore.QThread):
         self.wait()
 
     def run(self):
+        sys.setrecursionlimit(50000)
         print("Starting game loop on thread: ", self.threadID, self.name)
         lastFrameTime = 0
         
@@ -32,11 +34,11 @@ class Loop(QtCore.QThread):
 
             #Limit the framerate to the one set in the config
             #If the framerate setting is set to 0, there is no framerate limit
-            fpsLimit = 0
+            fpsLimit = 60
             if fpsLimit != 0:
                 sleepTime = 1/fpsLimit - dt
                 if sleepTime > 0: time.sleep(sleepTime)
 
-            print("FPS: ", 1/dt)
+            #print("FPS: ", 1/dt)
 
-            glView.CreateArea.updateGL(self)
+            self.updateSig.emit()

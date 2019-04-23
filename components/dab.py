@@ -22,6 +22,7 @@ class DatabaseActions():
     def createTables(self):
         cnfLogic = "CREATE TABLE IF NOT EXISTS cnfLogic('prim' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' TEXT, 'value' INTEGER);"
         cnfPerf = "CREATE TABLE IF NOT EXISTS cnfPerf('prim' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' TEXT, 'value' INTEGER);"
+        cnfView = "CREATE TABLE IF NOT EXISTS cnfView('prim' INTEGER PRIMARY KEY AUTOINCREMENT, 'name' TEXT, 'value' INTEGER);"
 
         cur.execute(cnfLogic)
         cur.execute(cnfPerf)
@@ -34,6 +35,11 @@ class DatabaseActions():
 
         #Performance settings
         cur.execute("INSERT INTO cnfPerf (name, value) VALUES ('fpsLimit', 120);")
+        cur.execute("INSERT INTO cnfPerf (name, value) VALUES ('renderDistance', 50);")
+        connection.commit()
+
+        #Viewport settings
+        cur.execute("INSERT INTO cnfView (name, value) VALUES ('fieldOfView', 90);")
         connection.commit()
     
     def insert(self):

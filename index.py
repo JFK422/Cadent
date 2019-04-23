@@ -1,7 +1,8 @@
-import sys, os, sip, sqlite3, time
+import sys, os, sip, sqlite3, time, platform, psutil
 import qtawesome as qta
 from components import create, gameLoop
 from PyQt5 import QtGui, QtCore, QtWidgets, Qt
+from OpenGL import GL
 
 #This is the MAIN file of the app. Its used for handeling hte diffrent scripts within this programm.
 #Debug prints are as formatted like this: FILE; CLASS; METHOD: MESSAGE
@@ -23,9 +24,15 @@ class Window(QtWidgets.QWidget):
         self.showMaximized()
         self.show()
 
+        print("System Info:")
+        print("Processor arch: ", platform.processor())
+        print("RAM: {0}MB".format(psutil.virtual_memory()[0]/1000000))
+        print("OS: ", platform.system())
+        print("Python version: ", platform.python_version())
         print("Qt version:", QtCore.QT_VERSION_STR)
         print("PyQt version:", Qt.PYQT_VERSION_STR)
         print("SIP version:", sip.SIP_VERSION_STR)
+        print("OpenGL version:",  str(GL.glGetString(GL.GL_VERSION)).split(" ")[0][-5:])
         print("Sqlite3 module version;", sqlite3.version)
         print("Sqlite3 version:", sqlite3.sqlite_version)
 
